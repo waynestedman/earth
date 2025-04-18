@@ -15,3 +15,12 @@
     /* max-height: 600px; */
   }
 }
+
+#VRButton {
+  border-color: var(--purple-60) !important;
+  color: var(--purple-60) !important;
+  background-color: rgba(138, 63, 252, 0.15) !important;
+  left: unset !important;
+  right: 5% !important;
+  bottom: 2rem !important;
+}
