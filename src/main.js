@@ -5,9 +5,14 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
 import * as satellite from 'satellite.js'; // Import satellite.js for TLE calculations
 import axios from 'axios';
+import { GUI } from 'dat.gui'
 
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('/draco/');
+
+const orbitalPeriod = 24 * 60 * 60; // 24 hours in seconds
+const earthRadius = 6371; // Earth radius in kilometers
+const earthRadiusMeters = earthRadius * 1000; // Convert to meters
 
 const canvas = document.querySelector('#appcanvas');
 
@@ -24,6 +29,15 @@ document.body.appendChild(VRButton.createButton(renderer));
 
 // Scene
 const scene = new THREE.Scene();
+
+// Speed control variable
+const settings = {
+  satelliteSpeed: 1, // Default speed multiplier
+};
+
+// Add dat.GUI slider
+const gui = new GUI();
+gui.add(settings, 'satelliteSpeed', 1, 50).step(1).name('Satellite Speed');
 
 // Create a group for satellites
 const satelliteGroup = new THREE.Group();
@@ -155,11 +169,15 @@ function createSatellitePath(satrec) {
   const now = new Date();
   const gmst = satellite.gstime(now);
 
+  // Calculate the orbital period in seconds
+  const meanMotion = satrec.no; // Mean motion (revolutions per minute)
+  const orbitalPeriod = (1 / meanMotion) * 60 * 60; // Orbital period in seconds
+
   // Generate points along the orbit
-  for (let i = 0; i <= 360; i += 10) { // 10-degree increments
+  for (let i = 0; i <= orbitalPeriod; i += 60) { // Increment by 60 seconds
     const time = new Date(now.getTime() + i * 1000); // Increment time
     const positionAndVelocity = satellite.propagate(satrec, time);
-    const positionEci = positionAndVelocity.position;
+    const positionEci = positionAndVelocity?.position;
 
     if (positionEci) {
       const positionGd = satellite.eciToGeodetic(positionEci, gmst);
@@ -180,7 +198,7 @@ function createSatellitePath(satrec) {
 
   // Create a curve from the points
   const curve = new THREE.CatmullRomCurve3(points);
-  const geometry = new THREE.BufferGeometry().setFromPoints(curve.getPoints(100));
+  const geometry = new THREE.BufferGeometry().setFromPoints(curve.getPoints(500)); // Increase resolution
   const material = new THREE.LineBasicMaterial({ color: 0xff0000 }); // Red color for the path
   const orbitLine = new THREE.Line(geometry, material);
 
@@ -203,12 +221,15 @@ function animate() {
   satellitePaths.forEach((satelliteData) => {
     const { satrec, mesh } = satelliteData;
 
+    // Calculate scaled time
+    const scaledTime = new Date(now.getTime() + (settings.satelliteSpeed - 1) * 1000); // Adjust time increment
+
     // Calculate current position
-    const positionAndVelocity = satellite.propagate(satrec, now);
-    const positionEci = positionAndVelocity.position;
+    const positionAndVelocity = satellite.propagate(satrec, scaledTime);
+    const positionEci = positionAndVelocity?.position;
 
     if (positionEci) {
-      const gmst = satellite.gstime(now);
+      const gmst = satellite.gstime(scaledTime);
       const positionGd = satellite.eciToGeodetic(positionEci, gmst);
 
       const latitude = satellite.degreesLat(positionGd.latitude);
@@ -230,7 +251,7 @@ function animate() {
 
   // Rotate the Earth model
   if (earthModel) {
-    earthModel.rotation.y += 0.002; // Adjust Earth's rotation speed
+    earthModel.rotation.y += 0.0017 * settings.satelliteSpeed; // Adjust Earth's rotation speed
   }
 
   controls.update();
