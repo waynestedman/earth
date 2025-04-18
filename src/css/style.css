@@ -1,0 +1,4 @@
+/* css entry point */
+
+@import './global.css';
+@import './app.module.css';

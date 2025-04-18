@@ -1,0 +1,147 @@
+/* Global css */
+
+:root {
+  --white: #ffffff;
+  --gray-10: #f4f4f4;
+  --gray-20: #e0e0e0;
+  --gray-30: #c6c6c6;
+  --gray-40: #a8a8a8;
+  --gray-50: #8d8d8d;
+  --gray-60: #6f6f6f;
+  --gray-70: #525252;
+  --gray-80: #393939;
+  --gray-90: #262626;
+  --gray-100: #161616;
+  --black: #000000;
+  --purple-20: #e8daff;
+  --purple-30: #d4bbff;
+  --purple-40: #be95ff;
+  --purple-50: #a56eff;
+  --purple-60: #8a3ffc;
+  --purple-70: #6929c4;
+  --purple-80: #491d8b;
+  --purple-90: #31135e;
+  --blue-10: #edf5ff;
+  --blue-20: #d0e2ff;
+  --blue-30: #a6c8ff;
+  --blue-40: #78a9ff;
+  --blue-50: #4589ff;
+  --blue-60: #0f62fe;
+  --blue-70: #0043ce;
+  --blue-80: #002d9c;
+  --blue-90: #001d6c;
+  --blue-100: #001141;
+  --oxford-blue: #212A37;
+  --cyan-60: #0072c3;
+  --teal-10: #d9fbfb;
+  --teal-20: #9ef0f0;
+  --teal-30: #3ddbd9;
+  --teal-40: #08bdba;
+  --teal-50: #009d9a;
+  --teal-60: #007d79;
+  --teal-70: #005d5d;
+  --teal-80: #004144;
+  --green-60: #198038;
+  --yellow-30: #f1c21b;
+  --yellow-40: #d2a106;
+  --yellow-50: #b28600;
+  --yellow-60: #8e6a00;
+  --yellow-70: 684e00;
+  --orange-40: #ff832b;
+  --orange-50: #eb6200;
+  --orange-60: #ba4e00;
+  --orange-70: #8a3800;
+  --magenta-40: #ff7eb6;
+  --magenta-50: #ee5396;
+  --magenta-60: #d02670;
+  --magenta-70: #9f1853;
+  --red-40: #ff8389;
+  --red-50: #fa4d56;
+  --red-60: #da1e28;
+  --red-70: #a2191f;
+/* custom */
+  --selector: #303947;
+  --artemis-gradient: linear-gradient(222deg; #386eec; #da447f);
+  --border-color: var(--gray-70);
+  --gradient-border: 3px solid var(--gradient);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  /* margin: 0; */
+  font-family: "Urbanist", san-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0;
+  background-color: var(--gray-90);
+  color: var(--gray-10);
+}
+
+h1 {
+  font-size: 2.625rem;
+  font-weight: 300;
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: 2rem;
+  line-height: 1.25;
+}
+
+h3 {
+  font-size: 1.75rem;
+  line-height: 1.25;
+}
+
+h4 {
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+h5 {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.375;
+}
+
+h6 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.29;
+}
+
+h1, h2, h3 {
+  color: var(--teal-80);
+}
+
+.disabled {
+  color: var(--gray-50);
+  text-decoration: none;
+}
+
+header {
+  margin: 0;
+  margin-bottom: 1rem;
+  padding-inline: 1rem;
+  background-color: var(--gray-20);
+  text-align: center;
+}
+
+canvas {
+  display: block;
+}
+
+#approot {
+  margin: 1rem auto;
+}
+
+#attribution {
+  position: absolute;
+  left: 2rem;
+  bottom: 1rem;
+}
