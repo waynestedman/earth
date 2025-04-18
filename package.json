@@ -1,7 +1,7 @@
 {
   "name": "earth",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "start": "vite",
@@ -12,6 +12,9 @@
     "vite": "^6.3.0"
   },
   "dependencies": {
+    "axios": "^1.8.4",
+    "dat.gui": "^0.7.9",
+    "satellite.js": "^6.0.0",
     "three": "^0.175.0"
   }
 }
