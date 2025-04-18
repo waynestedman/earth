@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
 
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('/draco/'); // local path
@@ -9,6 +10,23 @@ dracoLoader.setDecoderPath('/draco/'); // local path
 // dracoLoader.setDecoderConfig({ type: 'js' });
 
 const canvas = document.querySelector('#appcanvas');
+
+// Renderer
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+// renderer.setClearColor('#444444');
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.physicallyCorrectLights = true;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+// document.body.appendChild(renderer.domElement);
+canvas.appendChild(renderer.domElement);
+
+// Enable XR
+// const xr = renderer.xr;
+// xr.enabled = true;
+renderer.xr.enabled = true;
+// const vrButton = new VRButton(renderer);
+document.body.appendChild(VRButton.createButton(renderer));
 
 // Scene
 const scene = new THREE.Scene();
@@ -42,16 +60,6 @@ function createOrbitCurve(radius, segments = 100) {
 // Camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0, 2, 5);
-
-// Renderer
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-// renderer.setClearColor('#444444');
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.physicallyCorrectLights = true;
-renderer.outputColorSpace = THREE.SRGBColorSpace;
-// document.body.appendChild(renderer.domElement);
-canvas.appendChild(renderer.domElement);
 
 // Light
 const light = new THREE.DirectionalLight(0xffffff, 1);
@@ -193,8 +201,6 @@ window.addEventListener('resize', () => {
 
 // Animation loop
 function animate() {
-  requestAnimationFrame(animate);
-
   if (earthModel) {
     earthModel.rotation.y += 0.002; // Rotate the earth model
   }
@@ -210,11 +216,14 @@ function animate() {
   });
 
   // keep labels facing the camera
-  satellites.forEach((sat) => {
-    sat.label.lookAt(camera.position);
-  });
+  // satellites.forEach((sat) => {
+  //   sat.label.lookAt(camera.position);
+  // });
 
   controls.update();
   renderer.render(scene, camera);
+
 }
-// animate();
+
+  // requestAnimationFrame(animate);
+  renderer.setAnimationLoop(animate);
