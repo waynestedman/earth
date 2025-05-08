@@ -3,7 +3,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
-import * as satellite from 'satellite.js'; // Import satellite.js for TLE calculations
+import * as satellite from 'satellite.js'; 
 import axios from 'axios';
 import { GUI } from 'dat.gui'
 
@@ -81,7 +81,20 @@ let satelliteModel; // placeholder for satellite model
 
 gltfLoader.load('/model/earth.glb', (gltf) => {
   earthModel = gltf.scene;
-  earthModel.scale.set(0.001, 0.001, 0.001);
+
+  earthModel.traverse((node) => {
+    if (node.isMesh) {
+      node.castShadow = true; // Enable shadow casting for the mesh
+      node.receiveShadow = true; // Enable shadow receiving for the mesh
+    }
+  });
+  // Set the model's position and scale
+  earthModel.position.set(0, 0, 0); // Center the model
+  earthModel.scale.set(0.001, 0.001, 0.001); // Scale the model down to fit the scene 
+  
+// Convert earthRadius to match the model's scale
+  // const scale = earthRadius / 10000000; 
+  // earthModel.scale.set(scale, scale, scale);
 
   // Compute bounding box to center it
   const box = new THREE.Box3().setFromObject(earthModel);
@@ -106,17 +119,17 @@ let satellitePaths = []; // Array to store satellite data and their paths
 // Load TLE data and setup satellites
 async function loadTLEData() {
   try {
-    const response = await axios.get('/tle.json'); // Use axios to fetch the TLE data
+    const response = await axios.get('/data/stations-tle.json'); 
     const tleData = response.data;
-
+console.log ('data: ', tleData);
     tleData.forEach((tle) => {
-      const satrec = satellite.twoline2satrec(tle.tleLine1, tle.tleLine2);
-
+      const satrec = satellite.twoline2satrec(tle.line1, tle.line2);
+console.log(satrec);
       // Store satellite data for animation
       satellitePaths.push({
         name: tle.name,
         satrec: satrec,
-        mesh: createSatelliteMesh(tle.name),
+        mesh: createSatelliteMesh(satrec.satnum),
       });
 
       // Create and display the satellite path
@@ -151,8 +164,14 @@ function createLabel(text) {
 
 // Create a satellite mesh with a label
 function createSatelliteMesh(name) {
-  const satelliteMesh = satelliteModel.clone(true);
-  satelliteMesh.scale.set(0.03, 0.03, 0.03); // Scale if needed
+// sphere
+  const geometry = new THREE.SphereGeometry(0.05, 8, 8); 
+  const material = new THREE.MeshStandardMaterial({ color: 0x08bdba });
+  const satelliteMesh = new THREE.Mesh(geometry, material);
+
+// model based
+  // const satelliteMesh = satelliteModel.clone(true);
+  // satelliteMesh.scale.set(0.03, 0.03, 0.03); 
 
   // Create and attach label
   const label = createLabel(name);
@@ -175,9 +194,9 @@ function createSatellitePath(satrec) {
 
   // Generate points along the orbit
   for (let i = 0; i <= orbitalPeriod; i += 60) { // Increment by 60 seconds
-    const time = new Date(now.getTime() + i * 1000); // Increment time
+    const time = new Date(now.getTime() + i * 90); // Increment time
     const positionAndVelocity = satellite.propagate(satrec, time);
-    const positionEci = positionAndVelocity?.position;
+    const positionEci = positionAndVelocity.position;
 
     if (positionEci) {
       const positionGd = satellite.eciToGeodetic(positionEci, gmst);
@@ -198,8 +217,9 @@ function createSatellitePath(satrec) {
 
   // Create a curve from the points
   const curve = new THREE.CatmullRomCurve3(points);
-  const geometry = new THREE.BufferGeometry().setFromPoints(curve.getPoints(500)); // Increase resolution
-  const material = new THREE.LineBasicMaterial({ color: 0xff0000 }); // Red color for the path
+  const geometry = new THREE.BufferGeometry().setFromPoints(curve.getPoints(100)); // Increase resolution
+  const material = new THREE.LineBasicMaterial({ color: 0x4589ff, transparent: true,
+    opacity: 0.5 }); // color for the path
   const orbitLine = new THREE.Line(geometry, material);
 
   // Add the orbit line to the scene
@@ -226,7 +246,7 @@ function animate() {
 
     // Calculate current position
     const positionAndVelocity = satellite.propagate(satrec, scaledTime);
-    const positionEci = positionAndVelocity?.position;
+    const positionEci = positionAndVelocity.position;
 
     if (positionEci) {
       const gmst = satellite.gstime(scaledTime);
