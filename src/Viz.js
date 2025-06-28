@@ -1,3 +1,5 @@
+// Visualization version
+import * as dat from 'dat.gui';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
@@ -8,6 +10,17 @@ const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('/draco/'); // local path
 // Optional if you're self-hosting:
 // dracoLoader.setDecoderConfig({ type: 'js' });
+
+// Dat Gui
+const gui = new dat.GUI();
+
+// Speed control variable
+const settings = {
+  satelliteSpeed: 1, // Default speed multiplier
+};
+
+// Add dat.GUI slider
+gui.add(settings, 'satelliteSpeed', 1, 50).step(1).name('Satellite Speed');
 
 const canvas = document.querySelector('#appcanvas');
 
