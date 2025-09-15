@@ -1,10 +1,12 @@
 // Visualization version
+
 import * as dat from 'dat.gui';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
+import { gsap } from "gsap";
 
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('/draco/'); // local path
@@ -19,8 +21,15 @@ const settings = {
   satelliteSpeed: 1, // Default speed multiplier
 };
 
+// GSAP timeline for satellite animations
+let satelliteTimeline;
+
 // Add dat.GUI slider
-gui.add(settings, 'satelliteSpeed', 1, 50).step(1).name('Satellite Speed');
+gui.add(settings, 'satelliteSpeed', 0.1, 10).step(0.1).name('Satellite Speed').onChange((value) => {
+  if (satelliteTimeline) {
+    satelliteTimeline.timeScale(value);
+  }
+});
 
 const canvas = document.querySelector('#appcanvas');
 
@@ -105,8 +114,16 @@ gltfLoader.load('/model/earth.glb', (gltf) => {
   earthModel.position.sub(center); // Center the model
 
   earthModel.rotation.x = THREE.MathUtils.degToRad(23.5); // Axial tilt
-  
+
   scene.add(earthModel);
+
+  // Start animations after Earth is loaded
+  if (satelliteModel) {
+    if (satelliteTimeline) {
+      satelliteTimeline.kill(); // Stop existing timeline
+    }
+    createSatelliteAnimations(); // Recreate with Earth rotation
+  }
 }, undefined, (error) => {
   console.error('An error occurred while loading the Earth model:', error);
 });
@@ -162,10 +179,11 @@ function setupSatellites() {
     // const geometry = new THREE.SphereGeometry(0.05, 8, 8); // tiny sphere
     // const material = new THREE.MeshStandardMaterial({ color: 0xffcc00 });
     // const satellite = new THREE.Mesh(geometry, material);
-    
+
     // Clone the satellite model
     const satellite = satelliteModel.clone(true);
-    satellite.scale.set(0.03, 0.03, 0.03); // scale if needed
+    satellite.scale.set(0.03, 0.03, 0.03);
+    satellite.rotation.x = THREE.MathUtils.degToRad(-90);
     satellite.userData.name = sat.name;
 
     // Create an orbit container to apply inclination
@@ -192,7 +210,7 @@ function setupSatellites() {
 
     const orbitCurve = createOrbitCurve(sat.radius);
     const orbitGeometry = new THREE.TubeGeometry(orbitCurve, 100, 0.003, 8, true);
-    const orbitMaterial = new THREE.MeshBasicMaterial({ 
+    const orbitMaterial = new THREE.MeshBasicMaterial({
       color: 0x00ffff, // cyan glow
       transparent: true,
       opacity: 0.6
@@ -200,6 +218,9 @@ function setupSatellites() {
     const orbitMesh = new THREE.Mesh(orbitGeometry, orbitMaterial);
     orbit.add(orbitMesh); // attach orbit line to its inclination rotation
   });
+
+  // Create GSAP timeline for satellite animations
+  createSatelliteAnimations();
 };
 
 // Add satellites to the scene
@@ -212,21 +233,45 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// Animation loop
-function animate() {
+// Create GSAP animations for satellites and Earth
+function createSatelliteAnimations() {
+  satelliteTimeline = gsap.timeline({ repeat: -1 });
+
+  // Add Earth rotation to the timeline
   if (earthModel) {
-    earthModel.rotation.y += 0.002; // Rotate the earth model
+    satelliteTimeline.to(earthModel.rotation, {
+      y: Math.PI * 2, // One full rotation (absolute value)
+      duration: 30, // Earth rotation duration
+      ease: "none",
+      repeat: -1
+    }, 0);
   }
 
-  // Update satellite positions
   satellites.forEach(sat => {
-    if (!sat.mesh) return; // Skip until it's ready
+    if (!sat.mesh) return;
 
-    sat.angle += sat.speed;
-    const x = sat.radius * Math.cos(sat.angle);
-    const z = sat.radius * Math.sin(sat.angle);
-    sat.mesh.position.set(x, 0, z);
+    // Calculate orbit duration based on speed (inverse relationship)
+    const duration = 100 / (sat.speed * 1000); // Convert to reasonable duration
+
+    // Create circular motion using GSAP
+    satelliteTimeline.to(sat, {
+      angle: sat.angle + Math.PI * 2, // One full rotation
+      duration: duration,
+      ease: "none",
+      repeat: -1,
+      onUpdate: function() {
+        const x = sat.radius * Math.cos(sat.angle);
+        const z = sat.radius * Math.sin(sat.angle);
+        sat.mesh.position.set(x, 0, z);
+      }
+    }, 0); // Start all animations at the same time
   });
+}
+
+// Animation loop
+function animate() {
+  // GSAP now handles both Earth rotation and satellite positions
+  // No manual updates needed
 
   // keep labels facing the camera
   // satellites.forEach((sat) => {
