@@ -1,0 +1,17 @@
+[
+  { "radius": 3, "speed": 0.01, "angle": 0, "inclination": 0, "name": "Satellite 1" },
+  { "radius": 3.5, "speed": 0.015, "angle": 0.5235987755982988, "inclination": 0.1, "name": "Satellite 2" },
+  { "radius": 3.5, "speed": 0.016, "angle": 1.0471975511965976, "inclination": -0.2, "name": "Satellite 3" },
+  { "radius": 3.5, "speed": 0.017, "angle": -0.7853981633974483, "inclination": 0.1, "name": "Satellite 4" },
+  { "radius": 3.5, "speed": 0.018, "angle": -1.5707963267948966, "inclination": -0.3, "name": "Satellite 5" },
+  { "radius": 3.5, "speed": 0.019, "angle": 1.2566370614359172, "inclination": -0.1, "name": "Satellite 6" },
+  { "radius": 3.5, "speed": 0.008, "angle": 1.5707963267948966, "inclination": 0.3, "name": "Satellite 7" },
+  { "radius": 4.0, "speed": 0.012, "angle": 3.141592653589793, "inclination": -0.2, "name": "Satellite 8" },
+  { "radius": 4.0, "speed": 0.013, "angle": -0.5235987755982988, "inclination": -0.1, "name": "Satellite 9" },
+  { "radius": 4.5, "speed": 0.014, "angle": -1.4959965017094253, "inclination": 0.2, "name": "Satellite 10" },
+  { "radius": 4.5, "speed": 0.014, "angle": -1.0471975511965976, "inclination": 0.2, "name": "Satellite 11" },
+  { "radius": 4.5, "speed": 0.006, "angle": 1.0471975511965976, "inclination": -0.3, "name": "Satellite 12" },
+  { "radius": 4.5, "speed": 0.009, "angle": -1.5707963267948966, "inclination": 0.5, "name": "Satellite 13" },
+  { "radius": 5.0, "speed": 0.011, "angle": 0.7853981633974483, "inclination": -0.1, "name": "Satellite 14" },
+  { "radius": 5.5, "speed": 0.007, "angle": -0.7853981633974483, "inclination": 0.4, "name": "Satellite 15" }
+]

@@ -7,14 +7,12 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
 import { gsap } from "gsap";
+import satellites from './data/satellites.json';
 
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('/draco/'); // local path
 // Optional if you're self-hosting:
 // dracoLoader.setDecoderConfig({ type: 'js' });
-
-// Dat Gui
-// const gui = new dat.GUI();
 
 // Speed control variable
 const settings = {
@@ -23,13 +21,6 @@ const settings = {
 
 // GSAP timeline for satellite animations
 let satelliteTimeline;
-
-// Add dat.GUI slider
-// gui.add(settings, 'satelliteSpeed', 0.1, 10).step(0.1).name('Satellite Speed').onChange((value) => {
-//   if (satelliteTimeline) {
-//     satelliteTimeline.timeScale(value);
-//   }
-// });
 
 const canvas = document.querySelector('#appcanvas');
 
@@ -134,42 +125,57 @@ gltfLoader.load('/model/magellan.glb', (gltf) => {
   animate(); // start animation after model is loaded
 });
 
-// satellite data
-const satellites = [
-  { radius: 3, speed: 0.01, angle: 0, inclination: 0, name: 'sat 1' },
-  { radius: 3.5, speed: 0.015, angle: Math.PI / 6, inclination: 0.1, name: 'sat 2' },
-  { radius: 3.5, speed: 0.016, angle: Math.PI / 3, inclination: -0.2, name: 'sat 3' },
-  { radius: 3.5, speed: 0.017, angle: -Math.PI / 4, inclination: 0.1, name: 'sat 4' },
-  { radius: 3.5, speed: 0.018, angle: -Math.PI / 2, inclination: -0.3, name: 'sat 5' },
-  { radius: 3.5, speed: 0.019, angle: Math.PI / 2.5, inclination: -0.1, name: 'sat 6' },
-  { radius: 3.5, speed: 0.008, angle: Math.PI / 2, inclination: 0.3, name: 'sat 7' },
-  { radius: 4.0, speed: 0.012, angle: Math.PI, inclination: -0.2, name: 'sat 8' },
-  { radius: 4.0, speed: 0.013, angle: -Math.PI / 6, inclination: -0.1, name: 'sat 9' },
-  { radius: 4.5, speed: 0.014, angle: -Math.PI / 2.1, inclination: 0.2, name: 'sat 10' },
-  { radius: 4.5, speed: 0.014, angle: -Math.PI / 3, inclination: 0.2, name: 'sat 11' },
-  { radius: 4.5, speed: 0.006, angle: Math.PI / 3, inclination: -0.3, name: 'sat 12' },
-  { radius: 4.5, speed: 0.009, angle: -Math.PI / 2, inclination: 0.5, name: 'sat 13' },
-  { radius: 5.0, speed: 0.011, angle: Math.PI / 4, inclination: -0.1, name: 'sat 14' },
-  { radius: 5.5, speed: 0.007, angle: -Math.PI / 4, inclination: 0.4, name: 'sat 15' }
-];
-
 // labels for the satellites
 function createLabel(text) {
   const canvas = document.createElement('canvas');
-  const size = 256;
-  canvas.width = size;
-  canvas.height = size;
-
   const context = canvas.getContext('2d');
+
+  // Set font first to measure text
+  const fontSize = 16;
+  context.font = `bold ${fontSize}px Urbanist, Arial`;
+
+  // Measure text to create tight bounding box
+  const metrics = context.measureText(text);
+  const textWidth = metrics.width;
+  const textHeight = fontSize; // Approximate height
+
+  // Add 8px padding on all sides (16px total width/height)
+  const padding = 1;
+  canvas.width = textWidth + (padding * 2);
+  canvas.height = textHeight + (padding * 2);
+
+  // Re-set font after canvas resize (canvas resets context)
+  context.font = `bold ${fontSize}px Urbanist, Arial`;
+  context.textAlign = 'left';
+  context.textBaseline = 'top';
+
+  // Draw background with padding
+  context.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  context.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Draw text with padding offset
   context.fillStyle = 'white';
-  context.font = '28px Arial';
-  context.textAlign = 'center';
-  context.fillText(text, size / 2, size / 2);
+  context.fillText(text, padding, padding);
 
   const texture = new THREE.CanvasTexture(canvas);
-  const material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
+  texture.needsUpdate = true;
+
+  const material = new THREE.SpriteMaterial({
+    map: texture,
+    transparent: true,
+    depthTest: true,
+    depthWrite: false,
+    sizeAttenuation: false
+  });
   const sprite = new THREE.Sprite(material);
-  sprite.scale.set(0.75, 0.25, 1); // Adjust size as needed
+
+  // Scale proportionally based on canvas dimensions
+  // When sizeAttenuation is false, we need to scale based on actual canvas size
+  const baseScale = 0.0025; // Adjust this to control overall label size
+  const scaleX = canvas.width * baseScale;
+  const scaleY = canvas.height * baseScale;
+  sprite.scale.set(scaleX, scaleY, 1);
+  sprite.renderOrder = 999;
 
   return sprite;
 }
@@ -193,10 +199,11 @@ function setupSatellites() {
 
     // const satellite = model;
 
-    // Create and attach label
+    // Create and attach label directly to orbit container
     const label = createLabel(sat.name);
-    label.position.set(0, 0.1, 0); // position label just above the satellite
-    satellite.add(label); // attach to the satellite so it follows its motion
+    // Store label separately and position it manually in animation
+    label.userData.satellite = satellite;
+    orbit.add(label);
 
     // scene.add(satellite); // add orbit to the scene
 
@@ -263,6 +270,10 @@ function createSatelliteAnimations() {
         const x = sat.radius * Math.cos(sat.angle);
         const z = sat.radius * Math.sin(sat.angle);
         sat.mesh.position.set(x, 0, z);
+        // Update label position to follow satellite (closer)
+        if (sat.label) {
+          sat.label.position.set(x, 0.15, z);
+        }
       }
     }, 0); // Start all animations at the same time
   });
