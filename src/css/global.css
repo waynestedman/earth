@@ -46,7 +46,7 @@
   --yellow-40: #d2a106;
   --yellow-50: #b28600;
   --yellow-60: #8e6a00;
-  --yellow-70: 684e00;
+  --yellow-70: #684e00;
   --orange-40: #ff832b;
   --orange-50: #eb6200;
   --orange-60: #ba4e00;
@@ -73,6 +73,7 @@
 
 body {
   /* margin: 0; */
+  position: relative;
   font-family: "Urbanist", san-serif;
   font-size: 16px;
   font-weight: 400;
@@ -122,22 +123,6 @@ h1, h2, h3 {
 .disabled {
   color: var(--gray-50);
   text-decoration: none;
-}
-
-header {
-  margin: 0;
-  margin-bottom: 1rem;
-  padding-inline: 1rem;
-  background-color: var(--gray-20);
-  text-align: center;
-}
-
-canvas {
-  display: block;
-}
-
-#approot {
-  margin: 1rem auto;
 }
 
 #attribution {

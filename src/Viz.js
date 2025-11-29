@@ -1,6 +1,6 @@
 // Visualization version
 
-import * as dat from 'dat.gui';
+// import * as dat from 'dat.gui';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
@@ -14,7 +14,7 @@ dracoLoader.setDecoderPath('/draco/'); // local path
 // dracoLoader.setDecoderConfig({ type: 'js' });
 
 // Dat Gui
-const gui = new dat.GUI();
+// const gui = new dat.GUI();
 
 // Speed control variable
 const settings = {
@@ -25,11 +25,11 @@ const settings = {
 let satelliteTimeline;
 
 // Add dat.GUI slider
-gui.add(settings, 'satelliteSpeed', 0.1, 10).step(0.1).name('Satellite Speed').onChange((value) => {
-  if (satelliteTimeline) {
-    satelliteTimeline.timeScale(value);
-  }
-});
+// gui.add(settings, 'satelliteSpeed', 0.1, 10).step(0.1).name('Satellite Speed').onChange((value) => {
+//   if (satelliteTimeline) {
+//     satelliteTimeline.timeScale(value);
+//   }
+// });
 
 const canvas = document.querySelector('#appcanvas');
 
