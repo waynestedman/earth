@@ -29,6 +29,9 @@ export class ColCard extends LitElement {
       width: 200px;
       height: auto;
       pointer-events: auto; /* allow clicks */
+      transform:
+        perspective(75em)
+        rotateY(10deg);
     }
     h3 {
       color: var(--blue-20);
@@ -53,13 +56,15 @@ export class ColCard extends LitElement {
     .satellite-name:hover {
       background-color: rgba(138, 63, 252, 0.2);
     }
-    .satellite-details p {
-      margin: 0.25rem 0;
-    }
     .selected-satellite {
       /* background-color: rgba(138, 63, 252, 0.3); */
       height: fit-content;
+      margin-top: 22px;
     }
+    .satellite-details p {
+      margin: 0.25rem 0;
+    }
+
   `;
 
   constructor() {
