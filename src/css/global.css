@@ -1,18 +1,18 @@
 /* Global css */
 
 :root {
-  --white: #ffffff;
-  --gray-10: #f4f4f4;
-  --gray-20: #e0e0e0;
-  --gray-30: #c6c6c6;
-  --gray-40: #a8a8a8;
-  --gray-50: #8d8d8d;
-  --gray-60: #6f6f6f;
-  --gray-70: #525252;
-  --gray-80: #393939;
-  --gray-90: #262626;
-  --gray-100: #161616;
-  --black: #000000;
+  --white: rgb(255, 255, 255);
+  --gray-10: rgb(244, 244, 244);
+  --gray-20: rgb(224, 224, 224);
+  --gray-30: rgb(198, 198, 198);
+  --gray-40: rgb(168, 168, 168);
+  --gray-50: rgb(141, 141, 141);
+  --gray-60: rgb(111, 111, 111);
+  --gray-70: rgb(82, 82, 82);
+  --gray-80: rgb(57, 57, 57);
+  --gray-90: rgb(38, 38, 38);
+  --gray-100: rgb(22, 22, 22);
+  --black: rgb(0, 0, 0);
   --purple-20: #e8daff;
   --purple-30: #d4bbff;
   --purple-40: #be95ff;
@@ -21,16 +21,16 @@
   --purple-70: #6929c4;
   --purple-80: #491d8b;
   --purple-90: #31135e;
-  --blue-10: #edf5ff;
-  --blue-20: #d0e2ff;
-  --blue-30: #a6c8ff;
-  --blue-40: #78a9ff;
-  --blue-50: #4589ff;
-  --blue-60: #0f62fe;
-  --blue-70: #0043ce;
-  --blue-80: #002d9c;
-  --blue-90: #001d6c;
-  --blue-100: #001141;
+  --blue-10: rgb(237, 245, 255);
+  --blue-20: rgb(208, 226, 255);
+  --blue-30: rgb(166, 200, 255);
+  --blue-40: rgb(120, 169, 255);
+  --blue-50: rgb(69, 137, 255);
+  --blue-60: rgb(15, 98, 254);
+  --blue-70: rgb(0, 67, 206);
+  --blue-80: rgb(0, 45, 156);
+  --blue-90: rgb(0, 29, 108);
+  --blue-100: rgb(0, 17, 65);
   --oxford-blue: #212A37;
   --cyan-60: #0072c3;
   --teal-10: #d9fbfb;

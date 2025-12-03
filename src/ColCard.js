@@ -10,26 +10,30 @@ export class ColCard extends LitElement {
   };
 
   static styles = css`
-    section {
+    .ui-panels {
+      display: grid;
+      grid-template-columns: 240px 240px;
+      gap: 0.5rem;
+      pointer-events: none; /* disable clicks to underlying elements */
+    }
+    .panel {
       position: relative;
-      color: var(--blue-30);
-      background-color: rgba(138, 63, 252, 0.15);
-      border: 1px solid var(--blue-40);
+      color: var(--gray-40);
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 2px solid var(--blue-40);
       border-radius: 8px;
       box-shadow: 2px 2px 6px rgba(255, 255, 255, 0.2);
       text-align: left;
       margin: 1rem;
       padding: 1rem;
-      width: 400px;
+      width: 200px;
       height: auto;
       pointer-events: auto; /* allow clicks */
     }
     h3 {
+      color: var(--blue-20);
       text-align: center;
       margin-top: 0;
-    }
-    h4 {
-      margin-bottom: 0.5rem;
     }
     ul {
       list-style-type: none;
@@ -42,7 +46,7 @@ export class ColCard extends LitElement {
       font-weight: 500;
       font-size: 0.95rem;
       cursor: pointer;
-      padding: 0.25rem 0.5rem;
+      padding: 0 1rem;
       border-radius: 4px;
       transition: background-color 0.2s;
     }
@@ -53,15 +57,8 @@ export class ColCard extends LitElement {
       margin: 0.25rem 0;
     }
     .selected-satellite {
-      background-color: rgba(138, 63, 252, 0.3);
-      border: 2px solid var(--blue-40);
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-    }
-    .selected-satellite h4 {
-      margin-top: 0;
-      color: var(--blue-20);
+      /* background-color: rgba(138, 63, 252, 0.3); */
+      height: fit-content;
     }
   `;
 
@@ -118,35 +115,35 @@ export class ColCard extends LitElement {
 
   render() {
     return html`
-      <section>
-        <h3>Satellite Info:</h3>
-
-        ${this.selectedSatellite ? html`
-          <div class="selected-satellite">
-            <h4>Selected: ${this.selectedSatellite.name}</h4>
-            <div class="satellite-details">
-              <p><strong>Launch Date:</strong> ${this.selectedSatellite.launchDate}</p>
-              <p><strong>Launch Location:</strong> ${this.selectedSatellite.launchLocation}</p>
-              <p><strong>Radius:</strong> ${this.selectedSatellite.radius}</p>
-              <p><strong>Speed:</strong> ${this.selectedSatellite.speed}</p>
-              <p><strong>Inclination:</strong> ${this.selectedSatellite.inclination}</p>
+      <div class="ui-panels">
+        <div class="panel satellite-list">
+          <h3>Satellite List:</h3>
+          ${this.satellites.length > 0 ? html`
+            <div>
+              <h4>All Satellites:</h4>
+              <ul>
+                ${this.satellites.map(sat => html`
+                  <li class="satellite-name" @click=${() => this.handleSatelliteClick(sat)}>
+                    ${sat.name}
+                  </li>
+                `)}
+              </ul>
             </div>
-          </div>
-        ` : html`<p>Click a satellite to view details</p>`}
-
-        ${this.satellites.length > 0 ? html`
-          <div>
-            <h4>All Satellites:</h4>
-            <ul>
-              ${this.satellites.map(sat => html`
-                <li class="satellite-name" @click=${() => this.handleSatelliteClick(sat)}>
-                  ${sat.name}
-                </li>
-              `)}
-            </ul>
-          </div>
-        ` : html`<p>Loading...</p>`}
-      </section>
+          ` : html`<p>Loading...</p>`}
+        </div>
+          ${this.selectedSatellite ? html`
+            <div class="panel selected-satellite">
+              <h3>Satellite details: ${this.selectedSatellite.name}</h3>
+              <div class="satellite-details">
+                <p><strong>Launch Date:</strong> ${this.selectedSatellite.launchDate}</p>
+                <p><strong>Launch Location:<br></strong> ${this.selectedSatellite.launchLocation}</p>
+                <p><strong>Radius:</strong> ${this.selectedSatellite.radius}</p>
+                <p><strong>Speed:</strong> ${this.selectedSatellite.speed}</p>
+                <p><strong>Inclination:</strong> ${this.selectedSatellite.inclination}</p>
+              </div>
+            </div>
+          ` : html``}
+      </div>
     `;
   }
 }
