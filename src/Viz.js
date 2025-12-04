@@ -288,7 +288,7 @@ function onMouseClick(event) {
 
       // Highlight the selected satellite's bounding box
       clickBox.material.opacity = 0.1;
-      clickBox.material.color.setHex(0x00ffff); // Cyan color
+      clickBox.material.color.setHex(0x153B84); // Button fill color
       previouslySelectedClickBox = clickBox;
 
       // Update selected satellite
@@ -325,8 +325,8 @@ window.addEventListener('satelliteSelected', (event) => {
     }
 
     // Highlight the selected satellite's bounding box
-    satellite.clickBox.material.opacity = 0.05;
-    satellite.clickBox.material.color.setHex(0x00ffff); // Cyan color
+    satellite.clickBox.material.opacity = 0.5;
+    satellite.clickBox.material.color.setHex(0x153B84); // button fill color
     previouslySelectedClickBox = satellite.clickBox;
   }
 });

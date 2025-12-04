@@ -7,9 +7,10 @@ export class AppHeader extends LitElement {
     header {
       margin: 0;
       padding-inline: 0.5rem;
-      background-color: var(--teal-80);
-      color: var(--blue-30);
+      background: var(--colorful-gradient);
+      color: var(--white);
       text-align: center;
+      pointer-events: auto; 
     }
 
     h1 {

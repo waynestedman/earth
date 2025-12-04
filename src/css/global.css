@@ -61,9 +61,18 @@
   --red-70: #a2191f;
 /* custom */
   --selector: #303947;
-  --artemis-gradient: linear-gradient(222deg; #386eec; #da447f);
-  --border-color: var(--gray-70);
-  --gradient-border: 3px solid var(--gradient);
+  --button-fill: #153B84;
+  --button-surface: rgba(151, 215, 255, 0.09);
+  --button-surface-gradient: linear-gradient(180deg, #232D74 0%, #283E98 42%, #23327F 100%);
+  --mrkt3-blue-1: #6173C6;
+  --mrkt3-blue-2: #324892;
+  /* --background-gradient: linear-gradient(-76deg, #232D74 0%, #283E98 42%, #23327F 100%); */
+  --background-gradient: linear-gradient(-76deg, rgba(35, 45, 116, 0.75) 0%, rgba(40, 62, 152, 0.75) 42%, rgba(35, 50, 127, 0.75) 100%);
+  --border-gradient: linear-gradient(-74deg, #6383D8, #6992D8);
+
+  --colorful-gradient: linear-gradient(2deg, #76FFFF 0%, #5EAEFF 47%, #6186FF 99%);
+  --border-color: #6992D8;
+  --gradient-border: 3px solid var(--border-gradient);
 }
 
 * {
@@ -81,6 +90,7 @@ body {
   letter-spacing: 0;
   background-color: var(--gray-90);
   color: var(--gray-10);
+  cursor: pointer;
 }
 
 h1 {
@@ -129,4 +139,8 @@ h1, h2, h3 {
   position: absolute;
   left: 2rem;
   bottom: 1rem;
+  
+  a {
+    color: var(--button-fill);
+  }
 }

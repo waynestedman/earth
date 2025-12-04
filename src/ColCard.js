@@ -18,9 +18,9 @@ export class ColCard extends LitElement {
     }
     .panel {
       position: relative;
-      color: var(--gray-40);
-      background-color: rgba(255, 255, 255, 0.1);
-      border: 2px solid var(--blue-40);
+      color: var(--white);
+      background: var(--background-gradient);
+      border: 3px solid var(--border-color);
       border-radius: 8px;
       box-shadow: 2px 2px 6px rgba(255, 255, 255, 0.2);
       text-align: left;
@@ -30,11 +30,10 @@ export class ColCard extends LitElement {
       height: auto;
       pointer-events: auto; /* allow clicks */
       transform:
-        perspective(75em)
-        rotateY(10deg);
+        perspective(1000px)
+        rotateY(2deg);
     }
     h3 {
-      color: var(--blue-20);
       text-align: center;
       margin-top: 0;
     }
@@ -49,17 +48,19 @@ export class ColCard extends LitElement {
       font-weight: 500;
       font-size: 0.95rem;
       cursor: pointer;
-      padding: 0 1rem;
+      padding: 0.5rem 1rem;
       border-radius: 4px;
+      background-color: var(--button-surface);
       transition: background-color 0.2s;
     }
     .satellite-name:hover {
-      background-color: rgba(138, 63, 252, 0.2);
+      background-color: var(--background-gradient);
+      outline: 3px solid var(--border-color);
     }
     .selected-satellite {
       /* background-color: rgba(138, 63, 252, 0.3); */
       height: fit-content;
-      margin-top: 22px;
+      margin-top: 44px;
     }
     .satellite-details p {
       margin: 0.25rem 0;
