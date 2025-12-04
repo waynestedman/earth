@@ -4,6 +4,11 @@ import {LitElement, html, css} from 'lit';
 
 export class AppTools extends LitElement {
   static styles = css`
+    p, li, span, a, button {
+      font-family: var(--font-family-cabin);
+      font-size: 1rem;
+    }
+
     .tools-footer {
       position: sticky;
       bottom: 0;

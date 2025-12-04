@@ -60,6 +60,11 @@
   --red-60: #da1e28;
   --red-70: #a2191f;
 /* custom */
+  --font-family-raleway: 'Raleway', sans-serif;
+  --font-family-cabin: 'Cabin', sans-serif;
+  --font-size: 16px;
+  --line-height: 1.5;
+  --font-weight: 400;
   --selector: #303947;
   --button-fill: #153B84;
   --button-surface: rgba(151, 215, 255, 0.09);
@@ -83,10 +88,10 @@
 body {
   /* margin: 0; */
   position: relative;
-  font-family: "Urbanist", san-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5;
+  font-family: var(--font-family-raleway);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  font-weight: var(--font-weight);
   letter-spacing: 0;
   background-color: var(--gray-90);
   color: var(--gray-10);
@@ -124,6 +129,11 @@ h6 {
   font-size: 0.875rem;
   font-weight: 600;
   line-height: 1.29;
+}
+
+p, li, span, a, button {
+  font-family: var(--font-family-cabin);
+  font-size: 1rem;
 }
 
 h1, h2, h3 {

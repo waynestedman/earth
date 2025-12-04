@@ -44,6 +44,12 @@ export class ColCard extends LitElement {
     li {
       margin: 0.5rem 0;
     }
+
+    p, li, span, a, button {
+      font-family: var(--font-family-cabin);
+      font-size: 1rem;
+    }
+
     .satellite-name {
       font-weight: 500;
       font-size: 0.95rem;

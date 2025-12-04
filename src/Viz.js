@@ -140,7 +140,7 @@ function createLabel(text) {
 
   // Set font first to measure text
   const fontSize = 16;
-  context.font = `bold ${fontSize}px Urbanist, Arial`;
+  context.font = `bold ${fontSize}px Raleway, sans-serif`;
 
   // Measure text to create tight bounding box
   const metrics = context.measureText(text);
@@ -153,7 +153,7 @@ function createLabel(text) {
   canvas.height = textHeight + (padding * 2);
 
   // Re-set font after canvas resize (canvas resets context)
-  context.font = `bold ${fontSize}px Urbanist, Arial`;
+  context.font = `bold ${fontSize}px Raleway, sans-serif`;
   context.textAlign = 'left';
   context.textBaseline = 'top';
 
@@ -241,7 +241,7 @@ function setupSatellites() {
     const orbitCurve = createOrbitCurve(sat.radius);
     const orbitGeometry = new THREE.TubeGeometry(orbitCurve, 100, 0.003, 8, true);
     const orbitMaterial = new THREE.MeshBasicMaterial({
-      color: 0x00ffff, // cyan glow
+      color: 0x76FFFF, // cyan glow
       transparent: true,
       opacity: 0.6
     });
