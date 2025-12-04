@@ -1,6 +1,12 @@
 // tools.js - creates the UI tools section
 
 import {LitElement, html, css} from 'lit';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
+import { library, icon } from '@fortawesome/fontawesome-svg-core';
+import { faGear } from '@fortawesome/free-solid-svg-icons';
+
+// Add icons to the library
+library.add(faGear);
 
 export class AppTools extends LitElement {
   static styles = css`
@@ -36,7 +42,7 @@ export class AppTools extends LitElement {
       border: 3px solid var(--border-color);
       background: var(--background-gradient);
       color: var(--white);
-      /* cursor: pointer; */
+      cursor: pointer;
     }
 
     .disabled {
@@ -47,13 +53,25 @@ export class AppTools extends LitElement {
       border: 3px solid var(--gray-40);
     }
 
+    .fa-icon {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+    }
+
+    button svg {
+      width: 16px;
+      height: 16px;
+    }
   `;
 
   render() {
+    const gearIcon = icon({ prefix: 'fas', iconName: 'gear' });
+    
     return html`
       <footer class="tools-footer">
         <button class="gear">
-          <i class="fa-solid fa-gear"></i>
+          ${unsafeHTML(gearIcon.html[0])}
         </button>
         <div class="tool-buttons">
           <button>satellite list</button>
@@ -63,4 +81,5 @@ export class AppTools extends LitElement {
     `;
   }
 }
+
 customElements.define('app-tools', AppTools);
