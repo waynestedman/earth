@@ -11,14 +11,15 @@ export class AppHeader extends LitElement {
       align-items: center;
       justify-content: space-between;
       width: 50%;
-      margin: 0 auto;
+      margin: 1rem auto 0 auto;
       padding-inline: 0.5rem;
-      border-radius: 1rem;
+      border-radius: 0.5rem;
       border: 3px solid var(--border-color);
       background: var(--colorful-gradient);
       color: var(--white);
       text-align: center;
       pointer-events: auto; 
+      cursor: default;
     }
 
     h1 {
@@ -33,13 +34,14 @@ export class AppHeader extends LitElement {
       border: 3px solid var(--border-color);
       background: var(--background-gradient);
       color: var(--white);
-      cursor: pointer;
+      /* cursor: pointer; */
     }
 
     .disabled {
       color: var(--gray-60);
       background: var(--gray-30);
       text-decoration: none;
+      cursor: not-allowed;
       border: none;
     }
 
