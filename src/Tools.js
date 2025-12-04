@@ -52,11 +52,12 @@ export class AppTools extends LitElement {
   render() {
     return html`
       <footer class="tools-footer">
-        <button class="gear">G</button>
+        <button class="gear">
+          <i class="fa-solid fa-gear"></i>
+        </button>
         <div class="tool-buttons">
           <button>satellite list</button>
           <button class="disabled">charts & graphs</button>
-
         </div>
       </footer>
     `;

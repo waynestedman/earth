@@ -9,7 +9,7 @@ export class AppHeader extends LitElement {
       display: flex;
       flex-direction: row;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
       width: 50%;
       margin: 1rem auto 0 auto;
       padding-inline: 0.5rem;
@@ -26,37 +26,12 @@ export class AppHeader extends LitElement {
       margin: 0 0 0 4rem; 
       color: var(--mrkt3-blue-2);
     }
-
-    button {
-      margin: 0 0.5rem;
-      padding: 0.5rem 1rem;
-      border-radius: 0.5rem;
-      border: 3px solid var(--border-color);
-      background: var(--background-gradient);
-      color: var(--white);
-      /* cursor: pointer; */
-    }
-
-    .disabled {
-      color: var(--gray-60);
-      background: none;
-      text-decoration: none;
-      cursor: not-allowed;
-      border: 3px solid var(--gray-40);
-    }
-
   `;
 
   render() {
     return html`
       <header>
         <h1>Satellite Analysis tool</h1>
-        <div class="tools">
-          <button>satellite list</button>
-          <button class="disabled">charts & graphs</button>
-
-        </div>
-
       </header>
     `;
   }
