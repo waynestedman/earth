@@ -148,8 +148,8 @@ h1, h2, h3 {
 
 #attribution {
   position: absolute;
-  left: 2rem;
-  bottom: 1rem;
+  right: 40px;
+  bottom: 6px;
   
   a {
     color: var(--button-fill);

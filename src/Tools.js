@@ -48,8 +48,11 @@ export class AppTools extends LitElement {
       border: 3px solid var(--border-color);
       background: var(--background-gradient);
       color: var(--white);
-      padding: 0.5rem;
+      padding: 0.75rem 0.75rem 0.5rem 0.75rem;
       margin: 0;
+      cursor: pointer;
+      vertical-align: middle;
+      text-align: center;
     }
 
     .tool-drawer {
@@ -63,14 +66,14 @@ export class AppTools extends LitElement {
       background: var(--background-gradient);
       color: var(--white);
       opacity: 0;
-      transform: translateX(-20px);
+      transform: translateX(-16px);
       pointer-events: none;
       transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
     .tool-drawer.open {
       opacity: 1;
-      transform: translateX(2rem);
+      transform: translateX(12px);
       pointer-events: auto;
     }
 
@@ -92,16 +95,16 @@ export class AppTools extends LitElement {
       border: 3px solid var(--gray-40);
     }
 
-    .fa-icon {
-      display: inline-block;
-      width: 1em;
-      height: 1em;
-    }
-
+    /* .fa-icon {
+       display: inline-block;
+       width: 1em;
+       height: 1em;
+     }
+*/
     button svg,
     .gear-button svg {
-      width: 16px;
-      height: 16px;
+      width: 24px;
+      height: 24px;
     }
   `;
 
