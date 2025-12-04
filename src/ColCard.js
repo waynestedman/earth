@@ -138,18 +138,18 @@ export class ColCard extends LitElement {
             </div>
           ` : html`<p>Loading...</p>`}
         </div>
-          ${this.selectedSatellite ? html`
-            <div class="panel selected-satellite">
-              <h3>Satellite details: ${this.selectedSatellite.name}</h3>
-              <div class="satellite-details">
-                <p><strong>Launch Date:</strong> ${this.selectedSatellite.launchDate}</p>
-                <p><strong>Launch Location:<br></strong> ${this.selectedSatellite.launchLocation}</p>
-                <p><strong>Radius:</strong> ${this.selectedSatellite.radius}</p>
-                <p><strong>Speed:</strong> ${this.selectedSatellite.speed}</p>
-                <p><strong>Inclination:</strong> ${this.selectedSatellite.inclination}</p>
-              </div>
+        ${this.selectedSatellite ? html`
+          <div class="panel selected-satellite">
+            <h3>Satellite details: ${this.selectedSatellite.name}</h3>
+            <div class="satellite-details">
+              <p><strong>Launch Date:</strong> ${this.selectedSatellite.launchDate}</p>
+              <p><strong>Launch Location:<br></strong> ${this.selectedSatellite.launchLocation}</p>
+              <p><strong>Radius:</strong> ${this.selectedSatellite.radius}</p>
+              <p><strong>Speed:</strong> ${this.selectedSatellite.speed}</p>
+              <p><strong>Inclination:</strong> ${this.selectedSatellite.inclination}</p>
             </div>
-          ` : html``}
+          </div>
+        ` : html``}
       </div>
     `;
   }

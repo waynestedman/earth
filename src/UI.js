@@ -3,6 +3,7 @@
 import {LitElement, html, css} from 'lit';
 import {AppHeader} from './Header.js';
 import {ColCard} from './ColCard.js';
+import {AppTools} from './Tools.js';
 import { inject } from "@vercel/analytics";
 
 export class AppUI extends LitElement {
@@ -25,6 +26,7 @@ export class AppUI extends LitElement {
       <main>
         <app-header></app-header>
         <col-card></col-card>
+        <app-tools></app-tools>
       </main>
     `;
   }

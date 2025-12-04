@@ -1,30 +1,27 @@
-// header.js - creates the UI header
+// tools.js - creates the UI tools section
 
 import {LitElement, html, css} from 'lit';
 
-export class AppHeader extends LitElement {
+export class AppTools extends LitElement {
   static styles = css`
-    header {
-      position: relative;
+    .tools-footer {
+      position: sticky;
+      bottom: 0;
+      left: 1rem;
       display: flex;
       flex-direction: row;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      width: 50%;
-      margin: 1rem auto 0 auto;
+      width: 30%;
+      margin: 0 0 2.5rem 0;
       padding-inline: 0.5rem;
       border-radius: 0.5rem;
       border: 3px solid var(--border-color);
-      background: var(--colorful-gradient);
+      background: var(--background-gradient);
       color: var(--white);
       text-align: center;
       pointer-events: auto; 
       cursor: default;
-    }
-
-    h1 {
-      margin: 0 0 0 4rem; 
-      color: var(--mrkt3-blue-2);
     }
 
     button {
@@ -49,16 +46,15 @@ export class AppHeader extends LitElement {
 
   render() {
     return html`
-      <header>
-        <h1>Satellite Analysis tool</h1>
-        <div class="tools">
+      <footer class="tools-footer">
+        <button class="gear">G</button>
+        <div class="tool-buttons">
           <button>satellite list</button>
           <button class="disabled">charts & graphs</button>
 
         </div>
-
-      </header>
+      </footer>
     `;
   }
 }
-customElements.define('app-header', AppHeader);
+customElements.define('app-tools', AppTools);
