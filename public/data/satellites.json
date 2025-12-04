@@ -1,0 +1,10 @@
+[
+  { "radius": 3, "speed": 0.01, "angle": 0, "inclination": 0, "name": "Satellite 1", "launchDate": "03/15/2020", "launchLocation": "Cape Canaveral, Florida, USA" },
+  { "radius": 3.5, "speed": 0.015, "angle": 0.5235987755982988, "inclination": 0.1, "name": "Satellite 2", "launchDate": "07/22/2020", "launchLocation": "Kourou, French Guiana, EU" },
+  { "radius": 3.5, "speed": 0.016, "angle": 1.0471975511965976, "inclination": -0.2, "name": "Satellite 3", "launchDate": "11/08/2020", "launchLocation": "Tanegashima, Japan" },
+  { "radius": 3.5, "speed": 0.017, "angle": -0.7853981633974483, "inclination": 0.1, "name": "Satellite 4", "launchDate": "02/14/2021", "launchLocation": "Vandenberg SFB, California, USA" },
+  { "radius": 3.5, "speed": 0.018, "angle": -1.5707963267948966, "inclination": -0.3, "name": "Satellite 5", "launchDate": "05/30/2021", "launchLocation": "Woomera, South Australia" },
+  { "radius": 3.5, "speed": 0.019, "angle": 1.2566370614359172, "inclination": -0.1, "name": "Satellite 6", "launchDate": "09/18/2021", "launchLocation": "Cape Canaveral, Florida, USA" },
+  { "radius": 3.5, "speed": 0.008, "angle": 1.5707963267948966, "inclination": 0.3, "name": "Satellite 7", "launchDate": "12/03/2021", "launchLocation": "Kourou, French Guiana, EU" },
+  { "radius": 4.0, "speed": 0.012, "angle": 3.141592653589793, "inclination": -0.2, "name": "Satellite 8", "launchDate": "03/27/2022", "launchLocation": "Tanegashima, Japan" }
+]

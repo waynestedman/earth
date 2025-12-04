@@ -112,7 +112,7 @@ export class ColCard extends LitElement {
 
   async loadSatelliteData() {
     try {
-      const response = await fetch('./src/data/satellites.json');
+      const response = await fetch('/data/satellites.json');
       const data = await response.json();
       this.satellites = data;
     } catch (error) {
