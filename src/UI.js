@@ -3,7 +3,7 @@
 import {LitElement, html, css} from 'lit';
 import {AppHeader} from './Header.js';
 import {ColCard} from './ColCard.js';
-
+import { inject } from "@vercel/analytics"
 export class AppUI extends LitElement {
   static styles = css`
     main {
