@@ -5,8 +5,16 @@ import {LitElement, html, css} from 'lit';
 export class AppHeader extends LitElement {
   static styles = css`
     header {
-      margin: 0;
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      width: 50%;
+      margin: 0 auto;
       padding-inline: 0.5rem;
+      border-radius: 1rem;
+      border: 3px solid var(--border-color);
       background: var(--colorful-gradient);
       color: var(--white);
       text-align: center;
@@ -14,14 +22,39 @@ export class AppHeader extends LitElement {
     }
 
     h1 {
-      margin: 0;
+      margin: 0 0 0 4rem; 
+      color: var(--mrkt3-blue-2);
     }
+
+    button {
+      margin: 0 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: 3px solid var(--border-color);
+      background: var(--background-gradient);
+      color: var(--white);
+      cursor: pointer;
+    }
+
+    .disabled {
+      color: var(--gray-60);
+      background: var(--gray-30);
+      text-decoration: none;
+      border: none;
+    }
+
   `;
 
   render() {
     return html`
       <header>
-        <h1>Earth & satellites</h1>
+        <h1>Satellite Analysis tool</h1>
+        <div class="tools">
+          <button>satellite list</button>
+          <button class="disabled">charts & graphs</button>
+
+        </div>
+
       </header>
     `;
   }
