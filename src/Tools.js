@@ -9,34 +9,73 @@ import { faGear } from '@fortawesome/free-solid-svg-icons';
 library.add(faGear);
 
 export class AppTools extends LitElement {
+  static properties = {
+    drawerOpen: { type: Boolean }
+  };
+
+  constructor() {
+    super();
+    this.drawerOpen = false;
+  }
+
+  toggleDrawer() {
+    this.drawerOpen = !this.drawerOpen;
+  }
+
   static styles = css`
+    :host {
+      position: relative;
+    }
+
     p, li, span, a, button {
       font-family: var(--font-family-cabin);
       font-size: 1rem;
     }
 
     .tools-footer {
-      position: sticky;
-      bottom: 0;
+      position: fixed;
+      bottom: 2.5rem;
       left: 1rem;
       display: flex;
       flex-direction: row;
-      align-items: flex-start;
-      justify-content: space-between;
-      width: 30%;
-      margin: 0 0 2.5rem 0;
-      padding-inline: 0.5rem;
+      align-items: center;
+      gap: 0.5rem;
+      pointer-events: auto;
+    }
+
+    .gear-button {
       border-radius: 0.5rem;
       border: 3px solid var(--border-color);
       background: var(--background-gradient);
       color: var(--white);
-      text-align: center;
-      pointer-events: auto; 
-      cursor: default;
+      padding: 0.5rem;
+      margin: 0;
     }
 
-    button {
-      margin: 0 0.5rem;
+    .tool-drawer {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: 3px solid var(--border-color);
+      background: var(--background-gradient);
+      color: var(--white);
+      opacity: 0;
+      transform: translateX(-20px);
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .tool-drawer.open {
+      opacity: 1;
+      transform: translateX(2rem);
+      pointer-events: auto;
+    }
+
+    .tool-drawer button {
+      margin: 0;
       padding: 0.5rem 1rem;
       border-radius: 0.5rem;
       border: 3px solid var(--border-color);
@@ -45,7 +84,7 @@ export class AppTools extends LitElement {
       cursor: pointer;
     }
 
-    .disabled {
+    .tool-drawer .disabled {
       color: var(--gray-60);
       background: none;
       text-decoration: none;
@@ -59,7 +98,8 @@ export class AppTools extends LitElement {
       height: 1em;
     }
 
-    button svg {
+    button svg,
+    .gear-button svg {
       width: 16px;
       height: 16px;
     }
@@ -67,13 +107,13 @@ export class AppTools extends LitElement {
 
   render() {
     const gearIcon = icon({ prefix: 'fas', iconName: 'gear' });
-    
+
     return html`
       <footer class="tools-footer">
-        <button class="gear">
+        <button class="gear-button" @click="${this.toggleDrawer}">
           ${unsafeHTML(gearIcon.html[0])}
         </button>
-        <div class="tool-buttons">
+        <div class="tool-drawer ${this.drawerOpen ? 'open' : ''}">
           <button>satellite list</button>
           <button class="disabled">charts & graphs</button>
         </div>
