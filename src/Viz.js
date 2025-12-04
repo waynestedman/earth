@@ -1,35 +1,26 @@
 // Visualization version
 
-import * as dat from 'dat.gui';
+// import * as dat from 'dat.gui';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
 import { gsap } from "gsap";
+import satellites from './data/satellites.json';
 
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('/draco/'); // local path
 // Optional if you're self-hosting:
 // dracoLoader.setDecoderConfig({ type: 'js' });
 
-// Dat Gui
-const gui = new dat.GUI();
-
 // Speed control variable
 const settings = {
-  satelliteSpeed: 1, // Default speed multiplier
+  satelliteSpeed: 0.1, // Default speed multiplier
 };
 
 // GSAP timeline for satellite animations
 let satelliteTimeline;
-
-// Add dat.GUI slider
-gui.add(settings, 'satelliteSpeed', 0.1, 10).step(0.1).name('Satellite Speed').onChange((value) => {
-  if (satelliteTimeline) {
-    satelliteTimeline.timeScale(value);
-  }
-});
 
 const canvas = document.querySelector('#appcanvas');
 
@@ -97,6 +88,14 @@ scene.add(new THREE.AmbientLight(0x404040, 1.5));
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
+// Raycaster for click detection
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+// Store currently selected satellite
+let selectedSatellite = null;
+let previouslySelectedClickBox = null;
+
 // Load GLB model
 const gltfLoader = new GLTFLoader();
 gltfLoader.setDRACOLoader(dracoLoader);
@@ -111,7 +110,7 @@ gltfLoader.load('/model/earth.glb', (gltf) => {
   // Compute bounding box to center it
   const box = new THREE.Box3().setFromObject(earthModel);
   const center = box.getCenter(new THREE.Vector3());
-  earthModel.position.sub(center); // Center the model
+  earthModel.position.sub(center);
 
   earthModel.rotation.x = THREE.MathUtils.degToRad(23.5); // Axial tilt
 
@@ -134,42 +133,57 @@ gltfLoader.load('/model/magellan.glb', (gltf) => {
   animate(); // start animation after model is loaded
 });
 
-// satellite data
-const satellites = [
-  { radius: 3, speed: 0.01, angle: 0, inclination: 0, name: 'sat 1' },
-  { radius: 3.5, speed: 0.015, angle: Math.PI / 6, inclination: 0.1, name: 'sat 2' },
-  { radius: 3.5, speed: 0.016, angle: Math.PI / 3, inclination: -0.2, name: 'sat 3' },
-  { radius: 3.5, speed: 0.017, angle: -Math.PI / 4, inclination: 0.1, name: 'sat 4' },
-  { radius: 3.5, speed: 0.018, angle: -Math.PI / 2, inclination: -0.3, name: 'sat 5' },
-  { radius: 3.5, speed: 0.019, angle: Math.PI / 2.5, inclination: -0.1, name: 'sat 6' },
-  { radius: 3.5, speed: 0.008, angle: Math.PI / 2, inclination: 0.3, name: 'sat 7' },
-  { radius: 4.0, speed: 0.012, angle: Math.PI, inclination: -0.2, name: 'sat 8' },
-  { radius: 4.0, speed: 0.013, angle: -Math.PI / 6, inclination: -0.1, name: 'sat 9' },
-  { radius: 4.5, speed: 0.014, angle: -Math.PI / 2.1, inclination: 0.2, name: 'sat 10' },
-  { radius: 4.5, speed: 0.014, angle: -Math.PI / 3, inclination: 0.2, name: 'sat 11' },
-  { radius: 4.5, speed: 0.006, angle: Math.PI / 3, inclination: -0.3, name: 'sat 12' },
-  { radius: 4.5, speed: 0.009, angle: -Math.PI / 2, inclination: 0.5, name: 'sat 13' },
-  { radius: 5.0, speed: 0.011, angle: Math.PI / 4, inclination: -0.1, name: 'sat 14' },
-  { radius: 5.5, speed: 0.007, angle: -Math.PI / 4, inclination: 0.4, name: 'sat 15' }
-];
-
 // labels for the satellites
 function createLabel(text) {
   const canvas = document.createElement('canvas');
-  const size = 256;
-  canvas.width = size;
-  canvas.height = size;
-
   const context = canvas.getContext('2d');
+
+  // Set font first to measure text
+  const fontSize = 16;
+  context.font = `bold ${fontSize}px Urbanist, Arial`;
+
+  // Measure text to create tight bounding box
+  const metrics = context.measureText(text);
+  const textWidth = metrics.width;
+  const textHeight = fontSize; // Approximate height
+
+  // Add 8px padding on all sides (16px total width/height)
+  const padding = 1;
+  canvas.width = textWidth + (padding * 2);
+  canvas.height = textHeight + (padding * 2);
+
+  // Re-set font after canvas resize (canvas resets context)
+  context.font = `bold ${fontSize}px Urbanist, Arial`;
+  context.textAlign = 'left';
+  context.textBaseline = 'top';
+
+  // Draw background with padding
+  context.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  context.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Draw text with padding offset
   context.fillStyle = 'white';
-  context.font = '28px Arial';
-  context.textAlign = 'center';
-  context.fillText(text, size / 2, size / 2);
+  context.fillText(text, padding, padding);
 
   const texture = new THREE.CanvasTexture(canvas);
-  const material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
+  texture.needsUpdate = true;
+
+  const material = new THREE.SpriteMaterial({
+    map: texture,
+    transparent: true,
+    depthTest: true,
+    depthWrite: false,
+    sizeAttenuation: false
+  });
   const sprite = new THREE.Sprite(material);
-  sprite.scale.set(0.75, 0.25, 1); // Adjust size as needed
+
+  // Scale proportionally based on canvas dimensions
+  // When sizeAttenuation is false, we need to scale based on actual canvas size
+  const baseScale = 0.0025; // Adjust this to control overall label size
+  const scaleX = canvas.width * baseScale;
+  const scaleY = canvas.height * baseScale;
+  sprite.scale.set(scaleX, scaleY, 1);
+  sprite.renderOrder = 999;
 
   return sprite;
 }
@@ -186,17 +200,32 @@ function setupSatellites() {
     satellite.rotation.x = THREE.MathUtils.degToRad(-90);
     satellite.userData.name = sat.name;
 
+    // Create invisible bounding box for click detection (expanded to include label)
+    const boxGeometry = new THREE.BoxGeometry(0.4, 0.4, 0.4);
+    const boxMaterial = new THREE.MeshBasicMaterial({
+      transparent: true,
+      opacity: 0,
+      depthTest: true,
+      depthWrite: false
+    });
+    const clickBox = new THREE.Mesh(boxGeometry, boxMaterial);
+    clickBox.position.y = 0.075; // Centered between satellite and label
+    clickBox.userData.satelliteData = sat;
+    clickBox.userData.isSatelliteClickBox = true;
+
     // Create an orbit container to apply inclination
     const orbit = new THREE.Object3D();
     orbit.rotation.x = sat.inclination;
     orbit.add(satellite);
+    orbit.add(clickBox);
 
     // const satellite = model;
 
-    // Create and attach label
+    // Create and attach label directly to orbit container
     const label = createLabel(sat.name);
-    label.position.set(0, 0.1, 0); // position label just above the satellite
-    satellite.add(label); // attach to the satellite so it follows its motion
+    // Store label separately and position it manually in animation
+    label.userData.satellite = satellite;
+    orbit.add(label);
 
     // scene.add(satellite); // add orbit to the scene
 
@@ -204,6 +233,7 @@ function setupSatellites() {
     sat.mesh = satellite;
     sat.orbit = orbit;
     sat.label = label;
+    sat.clickBox = clickBox;
 
     // Add the orbit container  to the satellite group
     satelliteGroup.add(orbit);
@@ -233,6 +263,77 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
+// Click detection
+function onMouseClick(event) {
+  // Calculate mouse position in normalized device coordinates (-1 to +1)
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  // Update the raycaster with camera and mouse position
+  raycaster.setFromCamera(mouse, camera);
+
+  // Calculate objects intersecting the ray
+  const intersects = raycaster.intersectObjects(scene.children, true);
+
+  // Find the first satellite click box
+  for (let i = 0; i < intersects.length; i++) {
+    if (intersects[i].object.userData.isSatelliteClickBox) {
+      const satelliteData = intersects[i].object.userData.satelliteData;
+      const clickBox = intersects[i].object;
+
+      // Remove highlight from previously selected satellite
+      if (previouslySelectedClickBox && previouslySelectedClickBox !== clickBox) {
+        previouslySelectedClickBox.material.opacity = 0;
+      }
+
+      // Highlight the selected satellite's bounding box
+      clickBox.material.opacity = 0.1;
+      clickBox.material.color.setHex(0x153B84); // Button fill color
+      previouslySelectedClickBox = clickBox;
+
+      // Update selected satellite
+      selectedSatellite = satelliteData;
+
+      // Log to console
+      console.log('Satellite clicked:', satelliteData.name);
+      console.log('Satellite data:', satelliteData);
+
+      // Emit custom event for UI to listen to
+      const satelliteClickEvent = new CustomEvent('satelliteSelected', {
+        detail: satelliteData
+      });
+      window.dispatchEvent(satelliteClickEvent);
+
+      break;
+    }
+  }
+}
+
+window.addEventListener('click', onMouseClick);
+
+// Listen for satellite selection from UI
+window.addEventListener('satelliteSelected', (event) => {
+  const satelliteData = event.detail;
+
+  // Find the corresponding satellite in the satellites array
+  const satellite = satellites.find(sat => sat.name === satelliteData.name);
+
+  if (satellite && satellite.clickBox) {
+    // Remove highlight from previously selected satellite
+    if (previouslySelectedClickBox && previouslySelectedClickBox !== satellite.clickBox) {
+      previouslySelectedClickBox.material.opacity = 0;
+    }
+
+    // Highlight the selected satellite's bounding box
+    satellite.clickBox.material.opacity = 0.5;
+    satellite.clickBox.material.color.setHex(0x153B84); // button fill color
+    previouslySelectedClickBox = satellite.clickBox;
+  }
+});
+
+// Export for external access
+export { selectedSatellite };
+
 // Create GSAP animations for satellites and Earth
 function createSatelliteAnimations() {
   satelliteTimeline = gsap.timeline({ repeat: -1 });
@@ -250,8 +351,8 @@ function createSatelliteAnimations() {
   satellites.forEach(sat => {
     if (!sat.mesh) return;
 
-    // Calculate orbit duration based on speed (inverse relationship)
-    const duration = 100 / (sat.speed * 1000); // Convert to reasonable duration
+    // const duration = 100 / (sat.speed * 1000); 
+    const duration = 100 / (sat.speed * settings.satelliteSpeed * 1000);
 
     // Create circular motion using GSAP
     satelliteTimeline.to(sat, {
@@ -263,6 +364,14 @@ function createSatelliteAnimations() {
         const x = sat.radius * Math.cos(sat.angle);
         const z = sat.radius * Math.sin(sat.angle);
         sat.mesh.position.set(x, 0, z);
+        // Update label position to follow satellite (closer)
+        if (sat.label) {
+          sat.label.position.set(x, 0.15, z);
+        }
+        // Update click box position to follow satellite (centered between satellite and label)
+        if (sat.clickBox) {
+          sat.clickBox.position.set(x, 0.075, z);
+        }
       }
     }, 0); // Start all animations at the same time
   });
@@ -270,18 +379,8 @@ function createSatelliteAnimations() {
 
 // Animation loop
 function animate() {
-  // GSAP now handles both Earth rotation and satellite positions
-  // No manual updates needed
-
-  // keep labels facing the camera
-  // satellites.forEach((sat) => {
-  //   sat.label.lookAt(camera.position);
-  // });
-
   controls.update();
   renderer.render(scene, camera);
-
 }
 
-  // requestAnimationFrame(animate);
   renderer.setAnimationLoop(animate);

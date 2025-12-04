@@ -1,25 +1,24 @@
 /* app.module.css - styles for the three.js app */
 
 #appcanvas {
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  /* margin: 0 auto; */
+  /* text-align: center; */
 
   canvas {
     display: block;
     margin: 0 auto;
     border-radius: 1rem;
-    width: 100% !important;
-    height: auto !important;
+    /* width: 100% !important;
+    height: auto !important; */
     /* max-width: 800px; */
     /* max-height: 600px; */
   }
 }
 
 #VRButton {
-  border-color: var(--purple-60) !important;
-  color: var(--purple-60) !important;
-  background-color: rgba(138, 63, 252, 0.15) !important;
+  color: var(--white);
+  background: var(--background-gradient);
+  border: 3px solid var(--border-color);
   left: unset !important;
   right: 5% !important;
   bottom: 2rem !important;
