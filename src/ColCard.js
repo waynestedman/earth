@@ -6,7 +6,8 @@ import {Accordion} from './Accordion.js';
 export class ColCard extends LitElement {
   static properties = {
     satellites: { type: Array, state: true },
-    selectedSatellite: { type: Object, state: true }
+    selectedSatellite: { type: Object, state: true },
+    activeTool: { type: String, state: true }
   };
 
   static styles = css`
@@ -86,9 +87,11 @@ export class ColCard extends LitElement {
     super();
     this.satellites = [];
     this.selectedSatellite = null;
+    this.activeTool = null;
 
-    // Bind the event handler
+    // Bind the event handlers
     this.handleSatelliteSelected = this.handleSatelliteSelected.bind(this);
+    this.handleToolChange = this.handleToolChange.bind(this);
   }
 
   async connectedCallback() {
@@ -97,12 +100,19 @@ export class ColCard extends LitElement {
 
     // Listen for satellite selection events
     window.addEventListener('satelliteSelected', this.handleSatelliteSelected);
+    // Listen for tool change events
+    window.addEventListener('toolChanged', this.handleToolChange);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    // Clean up event listener
+    // Clean up event listeners
     window.removeEventListener('satelliteSelected', this.handleSatelliteSelected);
+    window.removeEventListener('toolChanged', this.handleToolChange);
+  }
+
+  handleToolChange(event) {
+    this.activeTool = event.detail;
   }
 
   handleSatelliteSelected(event) {
@@ -136,20 +146,22 @@ export class ColCard extends LitElement {
   render() {
     return html`
       <div class="ui-panels">
-        <div class="panel satellite-list">
-          <h3>Satellite List:</h3>
-          ${this.satellites.length > 0 ? html`
-            <div>
-              <ul>
-                ${this.satellites.map(sat => html`
-                  <li class="satellite-name" @click=${() => this.handleSatelliteClick(sat)}>
-                    ${sat.name}
-                  </li>
-                `)}
-              </ul>
-            </div>
-          ` : html`<p>Loading...</p>`}
-        </div>
+        ${this.activeTool === 'satellite-list' ? html`
+          <div class="panel satellite-list">
+            <h3>Satellite List:</h3>
+            ${this.satellites.length > 0 ? html`
+              <div>
+                <ul>
+                  ${this.satellites.map(sat => html`
+                    <li class="satellite-name" @click=${() => this.handleSatelliteClick(sat)}>
+                      ${sat.name}
+                    </li>
+                  `)}
+                </ul>
+              </div>
+            ` : html`<p>Loading...</p>`}
+          </div>
+        ` : ''}
         ${this.selectedSatellite ? html`
           <div class="panel selected-satellite">
             <h3>Satellite details: ${this.selectedSatellite.name}</h3>

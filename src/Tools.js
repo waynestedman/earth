@@ -10,16 +10,28 @@ library.add(faGear);
 
 export class AppTools extends LitElement {
   static properties = {
-    drawerOpen: { type: Boolean }
+    drawerOpen: { type: Boolean },
+    activeTool: { type: String }
   };
 
   constructor() {
     super();
     this.drawerOpen = false;
+    this.activeTool = null;
   }
 
   toggleDrawer() {
     this.drawerOpen = !this.drawerOpen;
+  }
+
+  handleToolClick(toolName) {
+    this.activeTool = toolName;
+
+    // Dispatch event to notify other components
+    const toolChangeEvent = new CustomEvent('toolChanged', {
+      detail: toolName
+    });
+    window.dispatchEvent(toolChangeEvent);
   }
 
   static styles = css`
@@ -109,12 +121,10 @@ export class AppTools extends LitElement {
       border: 3px solid var(--gray-40);
     }
 
-    /* .fa-icon {
-       display: inline-block;
-       width: 1em;
-       height: 1em;
-     }
-*/
+    .tool-drawer .active {
+      background-color: var(--blue-50);
+      border: 3px solid var(--blue-80);
+    }
   `;
 
   render() {
@@ -127,7 +137,11 @@ export class AppTools extends LitElement {
           <p>Tools</p>
         </button>
         <div class="tool-drawer ${this.drawerOpen ? 'open' : ''}">
-          <button>satellite list</button>
+          <button
+            @click="${() => this.handleToolClick('satellite-list')}"
+            class="${this.activeTool === 'satellite-list' ? 'active' : ''}">
+            satellite list
+          </button>
           <button class="disabled">charts & graphs</button>
         </div>
       </footer>
