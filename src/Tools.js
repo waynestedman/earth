@@ -46,7 +46,7 @@ export class AppTools extends LitElement {
 
     .tools-footer {
       position: fixed;
-      bottom: 2.5rem;
+      bottom: 8px;
       left: 1rem;
       display: flex;
       flex-direction: row;
