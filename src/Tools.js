@@ -48,11 +48,25 @@ export class AppTools extends LitElement {
       border: 3px solid var(--border-color);
       background: var(--background-gradient);
       color: var(--white);
-      padding: 0.75rem 0.75rem 0.5rem 0.75rem;
+      padding: 0.5rem 0.75rem; 
       margin: 0;
       cursor: pointer;
       vertical-align: middle;
       text-align: center;
+
+      p {
+        display: inline-block;
+        margin: 0;
+        padding-left: 0.5rem;
+        font-size: 18px;
+      }
+    }
+
+    button svg,
+    .gear-button svg {
+      width: 18px;
+      height: 18px;
+      vertical-align: text-top;
     }
 
     .tool-drawer {
@@ -101,11 +115,6 @@ export class AppTools extends LitElement {
        height: 1em;
      }
 */
-    button svg,
-    .gear-button svg {
-      width: 24px;
-      height: 24px;
-    }
   `;
 
   render() {
@@ -115,6 +124,7 @@ export class AppTools extends LitElement {
       <footer class="tools-footer">
         <button class="gear-button" @click="${this.toggleDrawer}">
           ${unsafeHTML(gearIcon.html[0])}
+          <p>Tools</p>
         </button>
         <div class="tool-drawer ${this.drawerOpen ? 'open' : ''}">
           <button>satellite list</button>

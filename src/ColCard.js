@@ -24,7 +24,7 @@ export class ColCard extends LitElement {
       border-radius: 8px;
       box-shadow: 2px 2px 6px rgba(255, 255, 255, 0.2);
       text-align: left;
-      margin: 1rem;
+      margin-left: 1rem;
       padding: 1rem;
       width: 200px;
       height: auto;
@@ -35,14 +35,21 @@ export class ColCard extends LitElement {
     }
     h3 {
       text-align: center;
-      margin-top: 0;
+      margin: 0;
     }
+
     ul {
       list-style-type: none;
       padding-left: 0;
+      margin: 0.5rem 0 0 0;
     }
+
     li {
       margin: 0.5rem 0;
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
     }
 
     p, li, span, a, button {
@@ -133,7 +140,6 @@ export class ColCard extends LitElement {
           <h3>Satellite List:</h3>
           ${this.satellites.length > 0 ? html`
             <div>
-              <h4>All Satellites:</h4>
               <ul>
                 ${this.satellites.map(sat => html`
                   <li class="satellite-name" @click=${() => this.handleSatelliteClick(sat)}>
