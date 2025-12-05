@@ -85,7 +85,7 @@ export class ColCard extends LitElement {
       /* background-color: rgba(138, 63, 252, 0.3); */
       height: fit-content;
       margin-top: 44px;
-      box-shadow: -3px 6px 16px rgba(255, 255, 255, 0.4);
+      box-shadow: rgba(255, 248, 191, 0.4) 0px 3px 11px 1px;
     }
     .satellite-details p {
       margin: 0.25rem 0;

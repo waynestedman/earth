@@ -93,7 +93,7 @@ body {
   line-height: var(--line-height);
   font-weight: var(--font-weight);
   letter-spacing: 0;
-  background-color: var(--gray-90);
+  background-color: var(--black);
   color: var(--gray-10);
   /* cursor: pointer; */
 }
