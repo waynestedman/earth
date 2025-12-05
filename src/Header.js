@@ -31,7 +31,7 @@ export class AppHeader extends LitElement {
   render() {
     return html`
       <header>
-        <h1>Satellite Analysis tool</h1>
+        <h1>Satellite Visualization tools</h1>
       </header>
     `;
   }

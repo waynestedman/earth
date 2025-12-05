@@ -71,6 +71,16 @@ export class ColCard extends LitElement {
       background-color: var(--background-gradient);
       outline: 3px solid var(--border-color);
     }
+
+    .active {
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: var(--background-gradient);
+      outline: 3px solid var(--border-color);
+      font-weight: 600;
+    }
+
     .selected-satellite {
       /* background-color: rgba(138, 63, 252, 0.3); */
       height: fit-content;
@@ -80,7 +90,6 @@ export class ColCard extends LitElement {
     .satellite-details p {
       margin: 0.25rem 0;
     }
-
   `;
 
   constructor() {
@@ -153,7 +162,7 @@ export class ColCard extends LitElement {
               <div>
                 <ul>
                   ${this.satellites.map(sat => html`
-                    <li class="satellite-name" @click=${() => this.handleSatelliteClick(sat)}>
+                    <li class="${this.selectedSatellite?.name === sat.name ? 'active' : 'satellite-name'}" @click=${() => this.handleSatelliteClick(sat)}>
                       ${sat.name}
                     </li>
                   `)}
