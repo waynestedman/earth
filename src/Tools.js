@@ -108,9 +108,15 @@ export class AppTools extends LitElement {
       padding: 0.5rem 1rem;
       border-radius: 0.5rem;
       border: 3px solid var(--border-color);
-      background: var(--background-gradient);
+      background: var(--button-surface-gradient);
       color: var(--white);
       cursor: pointer;
+
+      &:hover, &:focus, &:active {
+        background: var(--colorful-gradient);
+        border: 3px solid var(--mrkt3-blue-2);
+        color: #232D74;
+      }
     }
 
     .tool-drawer .disabled {
@@ -122,8 +128,9 @@ export class AppTools extends LitElement {
     }
 
     .tool-drawer .active {
-      background-color: var(--blue-50);
-      border: 3px solid var(--blue-80);
+      background: var(--colorful-gradient);
+      border: 3px solid var(--mrkt3-blue-2);
+      color: #232D74;
     }
   `;
 
